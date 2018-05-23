@@ -31,7 +31,7 @@ Set
 
 ### Simple Function Component
 
-```javascript
+```jsx
 <div id="card"></div>
 
 // import React from 'react';
@@ -50,7 +50,7 @@ ReactDOM.render(<Card></Card>, document.getElementById('card')) // EMPHASIZE thi
 
 ### Simple Function Component with Property
 
-```javascript
+```jsx
 function Card(props) {
   return (
     <div>
@@ -69,7 +69,7 @@ ReactDOM.render(card2, document.getElementById('card2'))
 
 ### Simple Function Component with Function Property
 
-```javascript
+```jsx
 function clickFunction() {
     console.log('Button clicked')
 }
@@ -91,7 +91,7 @@ ReactDOM.render(card, document.getElementById('card'));
 
 ### Class Component
 
-```javascript
+```jsx
 let clickCount = 0;
 
 function clickFunction() {
@@ -118,7 +118,7 @@ ReactDOM.render(card, document.getElementById('card'));
 
 ### Class Component with State
 
-```javascript
+```jsx
 // Show the WRONG way first!
 
 // WRONG WAY!
@@ -149,11 +149,11 @@ let card = <Card src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/
 ReactDOM.render(card, document.getElementById('card'));
 ```
 
-```javascript
+```jsx
 // RIGHT way
 class Card extends React.Component {
-    constructor() {
-        super(); // remember to call super()
+    constructor(props) {
+        super(props); // remember to call super()
         // Initialize state here
         this.state = {
         	clickCount: 0,  
@@ -185,13 +185,13 @@ ReactDOM.render(card, document.getElementById('card'));
 
 ### Use Another Component Inside This Component
 
-```javascript
+```jsx
 function CountDisplay(props) {
     return <p>I have clicked this button {props.clickCount} times</p>
 }
 class Card extends React.Component {
-    constructor() {
-        super(); // remember to call super()
+    constructor(props) {
+        super(props); // remember to call super()
         // Initialize state here
         this.state = {
         	clickCount: 0,  
@@ -224,10 +224,10 @@ ReactDOM.render(card, document.getElementById('card'));
 
 ### Use Method to Fill
 
-```javascript
+```jsx
 class Card extends React.Component {
-    constructor() {
-        super(); // remember to call super()
+    constructor(props) {
+        super(props); // remember to call super()
         // Initialize state here
         this.state = {
         	clickCount: 0,  
