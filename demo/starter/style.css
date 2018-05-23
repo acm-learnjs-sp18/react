@@ -1,0 +1,90 @@
+* {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+h1 {
+  text-align: center;
+  color: lightskyblue;
+}
+
+.todo__entries {
+  margin: auto 20%;
+  padding: 1em;
+  background-color: #daf0f8;
+  border-radius: 5px;
+}
+
+.todo__item-container  {
+  display: inline-block;
+  width: 100%;
+}
+
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  background-color: lightskyblue;
+
+  margin: 1em auto;
+
+  border: 2px solid #399bff;
+  border-radius: 5px;
+}
+
+.todo__item span {
+  margin: 0.5em 1em;
+
+  color: white;
+}
+
+.todo__item span.todo__item-body {
+  flex-grow: 1;
+}
+
+.todo__item button {
+  margin: 0.5em 1em;
+  color: white;
+  background-color: #f8a700;
+  border-radius: 5px;
+}
+
+.todo__input-container {
+  margin: auto 20%;
+  display: inline-block;
+}
+
+.todo__input-container input {
+  border-radius: 3px;
+  height: 2em;
+}
+
+.todo__input-container button {
+  margin-left: 2em;
+  height: 2em;
+  border-radius: 3px;
+  color: white;
+  background-color: lightskyblue;
+}
+
+.annoying {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100%  {
+    background-color: lime;
+  }
+  33% {
+    background-color: blue;
+  }
+  66% {
+    background-color: #ff0080;
+  }
+}
