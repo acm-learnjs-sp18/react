@@ -250,7 +250,7 @@ class Card extends React.Component {
               <img src={this.props.src}></img>
               <h1>{this.props.text}</h1>
               <button onClick={this.handleClick}>Click me</button>
-           	  {this.displayCount(this.state.clickCount)}
+	      {this.displayCount(this.state.clickCount)}
             </div>
         );
     }
