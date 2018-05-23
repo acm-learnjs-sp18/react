@@ -85,7 +85,6 @@ class TodoApp extends React.Component {
     });
   };
 
-  // Notice: a function that returns another function
   removeTodo = (index) => {
     let newTodos = this.state.todos.slice();
     newTodos.splice(index, 1);
