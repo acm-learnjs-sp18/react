@@ -65,14 +65,6 @@ function getDateString() {
 /* END Boilerplate
  */
 
-function TodoAdder(props) {
-  return <TextInput title="Add Todo:" save={props.save} />
-}
-
-function NameChanger(props) {
-  return <TextInput title="Change your name:" save={props.save} />
-}
-
 class TodoApp extends React.Component {
   constructor() {
     super();
@@ -108,7 +100,7 @@ class TodoApp extends React.Component {
     });
   };
 
-  createEntries() {
+  createEntries = () => {
     let entries = [];
     for (let i = 0; i < this.state.todos.length; i++) {
       let todo = this.state.todos[i];
@@ -127,7 +119,7 @@ class TodoApp extends React.Component {
         {entries}
       </div>
     );
-  }
+  };
 
   toggleAnnoy = () => {
     this.setState({
@@ -141,8 +133,8 @@ class TodoApp extends React.Component {
         <div className={this.state.shouldAnnoy ? 'annoying' : ''}>
           <h1>{this.state.name}'s Todo List</h1>
           {this.createEntries()}
-          <NameChanger save={this.changeName}/>
-          <TodoAdder save={this.addTodo}/>
+          <TextInput title="Change your name:" save={this.changeName} />
+          <TextInput title="Add Todo:" save={this.addTodo} />
         </div>
         <button onClick={this.toggleAnnoy}>What the heck?</button>
       </div>
