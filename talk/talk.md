@@ -58,7 +58,7 @@ function Card() {
   );
 }
 
-ReactDOM.render(<Card></Card>, document.getElementById('card')) // EMPHASIZE this
+ReactDOM.render(<Card></Card>, document.getElementById('app')) // EMPHASIZE this
 ```
 
 Notice that EVERY single JSX tags need a closing tag, even if in HTML they are empty elements (with empty body), such as `<img></img>`. 
@@ -160,19 +160,6 @@ function Card(props) {
       <p>You clicked the button {likeCount} times</p> // To actually render {} as string, try {"{}"}
     </div>
   );
-}
-
-class Card extends React.Component {
-    render() {
-        return (
-            <div>
-              <img src={this.props.src}></img>
-              <h1>{this.props.text}</h1>
-              <button onClick={likes}>Like</button>
-              <p>You clicked the button {likeCount} times</p> // To actually render {} as string, try {"{}"}
-            </div>
-        );
-    }
 }
 
 ReactDOM.render(<Card src="https://tinyurl.com/acmreactimg" text="React" />, document.getElementById('app'))
