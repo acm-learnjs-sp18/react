@@ -60,8 +60,8 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
    ```jsx
    constructor() {
    	super();
-       this.state = {
-         todos: [],
+   	this.state = {
+   		todos: [],
    	};
    }
    ```
