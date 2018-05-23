@@ -1,13 +1,21 @@
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 
+/* BEGIN Boilerplate
+ *
+ * <TodoItem body="body" date="dateString" remove={ removeFunc } />
+ * <TextInput title="title" save={ saveFunc } />
+ *
+ * For the logic of implementing this component, check out README.md
+ */
+
 function TodoItem({ body, date, remove }) {
   return (
-      <div className="todo__item">
-        <span>{date}</span>
-        <span className="todo__item-body">{body}</span>
-        <button onClick={remove}>Remove</button>
-      </div>
+    <div className="todo__item">
+      <span>{date}</span>
+      <span className="todo__item-body">{body}</span>
+      <button onClick={remove}>Remove</button>
+    </div>
   );
 }
 
@@ -51,17 +59,11 @@ class TextInput extends React.Component {
   }
 }
 
-class TodoAdder extends React.Component {
-  render() {
-    return <TextInput title="Add Todo:" {...this.props} />
-  }
+function getDateString() {
+  return new Date().toLocaleDateString();
 }
-
-class NameChanger extends React.Component {
-  render() {
-    return <TextInput title="Change your name:" {...this.props} />
-  }
-}
+/* END Boilerplate
+ */
 
 class TodoApp extends React.Component {
   constructor() {
@@ -76,45 +78,53 @@ class TodoApp extends React.Component {
   addTodo = (text) => {
     // Immutability Helper is a better solution
     // https://github.com/kolodny/immutability-helper
-    this.setState(prevState => {
-      const newTodos = prevState.todos.slice();
-      newTodos.push({ body: text, date: new Date().toLocaleDateString() });
-      return {
-        todos: newTodos,
-      };
-    })
+    let newTodos = this.state.todos.slice();
+    newTodos.push({ body: text, date: getDateString() });
+    this.setState({
+      todos: newTodos
+    });
   };
 
-  // Notice: a function that returns another function
-  removeTodo = index => () => {
-    this.setState(prevState => {
-      const newTodos = prevState.todos.slice();
-      newTodos.splice(index, 1);
-      return {
-        todos: newTodos,
-      };
-    })
+  removeTodo = (index) => {
+    let newTodos = this.state.todos.slice();
+    newTodos.splice(index, 1);
+    this.setState({
+      todos: newTodos
+    });
   };
 
-  createEntries() {
-    // we can use for loop too
-    const entries = this.state.todos.map((todo, index) => {
-      return (
+  changeName = (newName) => {
+    this.setState({
+      name: newName
+    });
+  };
+
+  createEntries = () => {
+    let entries = [];
+    for (let i = 0; i < this.state.todos.length; i++) {
+      let todo = this.state.todos[i];
+      entries.push(
         <TodoItem
-          key={index}
+          key={i}
           body={todo.body}
           date={todo.date}
-          remove={this.removeTodo(index)}
+          remove={() => this.removeTodo(i)}
         />
       );
-    });
+    }
 
     return (
       <div className="todo__entries">
         {entries}
       </div>
     );
-  }
+  };
+
+  toggleAnnoy = () => {
+    this.setState({
+      shouldAnnoy: !this.state.shouldAnnoy
+    });
+  };
 
   render() {
     return (
@@ -122,10 +132,10 @@ class TodoApp extends React.Component {
         <div className={this.state.shouldAnnoy ? 'annoying' : ''}>
           <h1>{this.state.name}'s Todo List</h1>
           {this.createEntries()}
-          <NameChanger save={(name) => this.setState({ name })}/>
-          <TodoAdder save={this.addTodo}/>
+          <TextInput title="Change your name:" save={this.changeName} />
+          <TextInput title="Add Todo:" save={this.addTodo} />
         </div>
-        <button onClick={() => this.setState({ shouldAnnoy: !this.state.shouldAnnoy })}>What the heck?</button>
+        <button onClick={this.toggleAnnoy}>What the heck?</button>
       </div>
     );
   }

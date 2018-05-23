@@ -26,11 +26,15 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    (Alternatively, directly edit on this [pen on Codepen.io](https://codepen.io/kevinkassimo/pen/gzZEjz). Fork it and start editing yourself!)
 
+   Starter: [https://tinyurl.com/learnjs-react-starter](https://tinyurl.com/learnjs-react-starter)
+
+   Final: [https://tinyurl.com/learnjs-react-final](https://tinyurl.com/learnjs-react-final)
+
    
 
    Start by going to `main.js` in the `starter` folder . There, you should see the following code:
 
-   ```javascript
+   ```jsx
    class TodoApp extends React.Component {
      constructor() {
        super();
@@ -53,7 +57,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
 2. Let us get to the work. Inside `TodoApp`'s constructor, there is a `this.state`, which is used in React to save states relevant to the current component. We want to store our data representation of `todo` items inside, thus we modify the code to initialize them as empty array.
 
-   ```javascript
+   ```jsx
    constructor() {
    	super();
        this.state = {
@@ -62,9 +66,9 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
    }
    ```
 
-3. A core mindset of React is to break down large stuff to small components. From the screenshot above, we know we would love to separate Todo entries and specially create a component for it to render. Thus, let us add the following code:
+3. A core mindset of React is to break down large stuff to small components. From the screenshot above, we know we would love to separate Todo entries and specially create a component for it to render. Thus, let us add the following code (already implemented in boilerplate):
 
-   ```javascript
+   ```jsx
    function TodoItem({ body, date }) {
      return (
          <div className="todo__item">
@@ -92,7 +96,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    In the part we provide HTML-like code as our return data, you would notice `<span>{date}</span>` . This `{data}` pattern is called __interpolation__, which basically means that data plugged inside of the curly braces would be evaluated as normal JavaScript, and its result would be set as the content of the tag. It basically means:
 
-   ```javascript
+   ```jsx
    let text = "hello";
    <span>{text}</span> /* means <span>hello</span> */
    ```
@@ -101,7 +105,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
 4. Good. Now we have our presentation model of todo items mostly done. If we now have some todo data stored in state of `TodoApp` , how can we pass them to this `TodoItem`? Notice we mentioned about the parameter `props` used to pass properties down to `TodoItem` . Therefore, the following code creates a `TodoItem` with `body` set to `TEST` and `date` to `5/23/2018` :
 
-   ```javascript
+   ```jsx
    <TodoItem body="TEST" date="5/23/2018"></TodoItem>
    // Alternative shorthand if the content is empty:
    <TodoItem body="TEST" date="5/23/2018" />
@@ -111,7 +115,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    Suppose we have the state of `TodoApp` to be:
 
-   ```javascript
+   ```jsx
    this.state = {
        todos: [
            {body: '1', date: '1/1/2018'},
@@ -122,25 +126,12 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    We can create a list of `TodoItem` s using the following code:
 
-   ```javascript
+   ```jsx
    let todoItems = [];
    for (let i = 0; i < this.state.todos.length; i++) {
-       todoItems.push(<TodoItem body={this.state.todos[i].body} date={this.state.todos[i].date} />);
+       let todo = this.state.todos[i];
+       todoItems.push(<TodoItem key={i} body={todo.body} date={todos.date} />);
    }
-   ```
-
-   To make this code a bit shorter, we can use a JavaScript method called `map`, which creates a list from another list, by "mapping" each element of the original list to a new element that would be pushed to the new list:
-
-   ```javascript
-   const entries = this.state.todos.map((todo, index) => {
-   	return (
-   		<TodoItem
-   			key={index}
-   			body={todo.body}
-   			date={todo.date}
-           />
-       );
-   });
    ```
 
    (We put a `key` onto the `TodoItem`, which is used to make React update more performant. It could be ignored for now, but ignoring it would result in warnings popping up in the console.)
@@ -165,19 +156,12 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    We can wrap our logic of rendering these todo items to the following method on `TodoApp`:
 
-   ```javascript
+   ```jsx
    createEntries() {
-   	// we can use for loop too
-       const entries = this.state.todos.map((todo, index) => {
-         return (
-           <TodoItem
-             key={index}
-             body={todo.body}
-             date={todo.date}
-             remove={this.removeTodo(index)}
-           />
-         );
-       });
+   	for (let i = 0; i < this.state.todos.length; i++) {
+           let todo = this.state.todos[i];
+           todoItems.push(<TodoItem key={i} body={todo.body} date={todos.date} />);
+       }
    
        return (
          <div className="todo__entries">
@@ -189,7 +173,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    …and we call it in `render()` by interpolation to make it actually rendered in DOM:
 
-   ```javascript
+   ```jsx
    render() {
        return (
          <div>
@@ -208,30 +192,24 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    With this knowledge, let's declare `addTodo` and `removeTodo` so that they could be used later for adding and removing todos:
 
-   ```javascript
+   ```jsx
    // NOTICE that we are using () => {}, ES6 arrow functions here. We do so such that `this` used inside would not be lost when detaching this method from component and pass it to child components. We will come back to this later on again.
    addTodo = (text) => {
        // Immutability Helper is a better solution
        // https://github.com/kolodny/immutability-helper
-       this.setState(prevState => {
-         const newTodos = prevState.todos.slice(); // .slice() creates a shallow copy of arrays
-         newTodos.push({ body: text, date: new Date().toLocaleDateString() }); // get current date string
-         return {
-           todos: newTodos,
-         };
-       })
+       let newTodos = this.state.todos.slice();
+       newTodos.push({ body: text, date: getDateString() });
+       this.setState({
+         todos: newTodos
+       });
    };
    
-   // Notice: a function that returns another function
-   // We will show how it is used later.
-   removeTodo = index => () => {
-       this.setState(prevState => {
-         const newTodos = prevState.todos.slice();
-         newTodos.splice(index, 1); // remove item at index of list
-         return {
-           todos: newTodos,
-         };
-       })
+   removeTodo = (index) => {
+       let newTodos = this.state.todos.slice();
+       newTodos.splice(index, 1);
+       this.setState({
+         todos: newTodos
+       });
    };
    ```
 
@@ -245,13 +223,13 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    First, we change the params (object structuring) to the following, basically allowing access an extra property called `remove`:
 
-   ```javascript
+   ```jsx
    function TodoItem({ body, date, remove }) { /*...*/ }
    ```
 
    Inside, we add a `<button>` after the two `<span>`s, and set its `onClick` event to `remove`:
 
-   ```javascript
+   ```jsx
    <button onClick={remove}>Remove</button>
    ```
 
@@ -259,12 +237,12 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    In `createEntries` of`TodoApp`, we pass down `removeTodo(index)` as the `remove` property to `TodoItems`:
 
-   ```javascript
+   ```jsx
    <TodoItem
    	key={index}
    	body={todo.body}
    	date={todo.date}
-   	remove={this.removeTodo(index)}
+   	remove={() => this.removeTodo(index)}
    />
    ```
 
@@ -280,7 +258,7 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    To get started, let us create a component `TextInput`, which is a wrapper for the input. This time, instead of first explaining our goals and ideas, let me present the code first, and see if, with current knowledge, you could understand what it is doing:
 
-   ```javascript
+   ```jsx
    class TextInput extends React.Component {
      constructor() {
        super();
@@ -324,32 +302,16 @@ The following tutorial MAY require some background knowledge with JavaScript, ES
 
    You might ask: this looks like a deadlock, as `value` is set to the current `this.state.text`, while in `this.updateText` we are accessing the `event.target.value`, which is still the current value due to explicit setting before, even if user types a new character! Unfortunately, it works. This is related to the `state` update we mentioned before: when `state` is changed, `render` is called to render DOM results. Now, it a user types a new character, the DOM element would first receive the input and triggers `onClick`. The `event.target.value` has already changed on the DOM side, which has yet to notify React side, since `setState` has not been called yet! Eventually, we call `setState` in `updateText`, updating the state, triggering rerender, with the new character, thus would render the new character in the resulting DOM view. It is a common React practice and it fits React's philosophy. (There is also a DOM way of doing the same thing, using refs, but is usually discouraged, thus I would not explain here).
 
-   We declared `TextInput` as a general input wrapper that clears its data on user submit. To better fits our use as the Todo "Add Item" box, we can set its title to "Add Todo:" by wrapping it inside of a component we named `TodoAdder`:
+   Eventually, we plug our `TextInput` to the `render` of `TodoApp`, with `addTodo` we declared before passed down as the `save` property:
 
-   ```javascript
-   class TodoAdder extends React.Component {
-     render() {
-       return <TextInput title="Add Todo:" {...this.props} />
-     }
-   }
-   ```
-
-   This component does nothing other then setting title to "Add Todo:", while passing down other `props` to `TextInput`. Notice that `{...this.props}` is a common practice in React, to "spread" the remaining props from itself to the wrapped component. It is equivalent to (in our case, assuming we pass only a single prop called `save` to save the new Todo Item data on the outer component, namely `TodoApp` in this example):
-
-   ```javascript
-   return <TextInput title="Add Todo:" save={this.props.save} />
-   ```
-
-   Eventually, we plug our `TodoAdder` to the `render` of `TodoApp`, with `addTodo` we declared before passed down as the `save` property:
-
-   ```javascript
+   ```jsx
    render() {
        return (
          <div>
            <div>
              <h1>NONO's Todo List</h1>
              {this.createEntries()}
-             <TodoAdder save={this.addTodo}/>
+             <TextInput title="Add Todo:" save={this.addTodo}/>
            </div>
          </div>
        );
