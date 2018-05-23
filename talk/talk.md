@@ -156,7 +156,7 @@ class Card extends React.Component {
         super(props); // remember to call super()
         // Initialize state here
         this.state = {
-        	clickCount: 0,  
+	    clickCount: 0,  
         };
     }
     
